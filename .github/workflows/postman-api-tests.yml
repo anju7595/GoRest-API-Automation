@@ -1,15 +1,24 @@
-name: GoRest API CI
-on: [push]
+name: Run Postman API Tests
+
+on:
+  push:
+    branches: [ main ]
+
 jobs:
-  test:
+  newman-tests:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
       - name: Install Newman
         run: npm install -g newman newman-reporter-htmlextra
+
       - name: Run API Tests
-        run: newman run GoRest-Production.postman_collection.json -e Prod.postman_environment.json -r htmlextra
+        run: |
+          newman run GoRest-Production.postman_collection.json \
+          -e Prod.postman_environment.json \
+          --env-var "base_url=https://gorest.co.in/public/v2" \
+          --env-var "api_token=${{ secrets.API_TOKEN }}" \
+          -r cli,htmlextra
