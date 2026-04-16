@@ -3,6 +3,8 @@ name: Run Postman API Tests
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   newman-tests:
@@ -12,7 +14,12 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install Newman
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Newman and Reporter
         run: npm install -g newman newman-reporter-htmlextra
 
       - name: Run Newman Tests
@@ -20,7 +27,7 @@ jobs:
           newman run GoRest-Production.postman_collection.json \
           --env-var "base_url=https://gorest.co.in/public/v2" \
           --env-var "api_token=${{ secrets.GOREST_TOKEN }}" \
-          --header "User-Agent: PostmanRuntime/7.31.1" \
+          -H "User-Agent:PostmanRuntime/7.31.1" \
           --reporters cli,htmlextra \
           --reporter-htmlextra-export report.html
 
