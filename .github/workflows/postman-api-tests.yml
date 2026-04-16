@@ -1,4 +1,4 @@
-name: Run Postman API Tests
+- name: Run Postman API Tests
 
 on:
   push:
@@ -10,15 +10,23 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Newman
         run: npm install -g newman newman-reporter-htmlextra
 
-      - name: Run API Tests
+      - name: Run Newman Tests
         run: |
           newman run GoRest-Production.postman_collection.json \
-          -e Prod.postman_environment.json \
           --env-var "base_url=https://gorest.co.in/public/v2" \
-          --env-var "api_token=${{ secrets.API_TOKEN }}" \
-          -r cli,htmlextra
+          --env-var "api_token=${{ secrets.GOREST_TOKEN }}" \
+          --header "User-Agent: PostmanRuntime/7.31.1" \
+          --reporters cli,htmlextra \
+          --reporter-htmlextra-export report.html
+
+      - name: Upload Report
+        uses: actions/upload-artifact@v4
+        if: always()  # This ensures the report uploads even if tests fail
+        with:
+          name: postman-report
+          path: report.html
