@@ -43,7 +43,13 @@
       ],
       "request": {
         "method": "POST",
-        "header": [],
+        "header": [
+          {
+            "key": "User-Agent",
+            "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\r\n    \"name\": \"Anju Professional QA\",\r\n    \"gender\": \"female\",\r\n    \"email\": \"anju.test.{{$randomInt}}@testmail.com\",\r\n    \"status\": \"active\"\r\n}",
@@ -93,6 +99,20 @@
               "    pm.expect(jsonData).to.have.property('email');\r",
               "    pm.expect(jsonData.status).to.be.oneOf([\"active\", \"inactive\"]);\r",
               "});\r",
+              "pm.test(\"Schema is valid\", function () {\r",
+              "    var schema = {\r",
+              "        \"type\": \"object\",\r",
+              "        \"required\": [\"id\", \"name\", \"email\", \"gender\", \"status\"],\r",
+              "        \"properties\": {\r",
+              "            \"id\": {\"type\": \"number\"},\r",
+              "            \"name\": {\"type\": \"string\"},\r",
+              "            \"email\": {\"type\": \"string\"},\r",
+              "            \"gender\": {\"type\": \"string\"},\r",
+              "            \"status\": {\"type\": \"string\"}\r",
+              "        }\r",
+              "    };\r",
+              "    pm.response.to.have.jsonSchema(schema);\r",
+              "});\r",
               "\r",
               "// 5. Practical Debugging (Visible in Postman Console)\r",
               "console.log(\"Successfully fetched data for User: \" + jsonData.name + \" (ID: \" + jsonData.id + \")\");"
@@ -105,7 +125,13 @@
       ],
       "request": {
         "method": "GET",
-        "header": [],
+        "header": [
+          {
+            "key": "User-Agent",
+            "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "type": "text"
+          }
+        ],
         "url": {
           "raw": "{{base_url}}/users/{{user_id}}",
           "host": [
@@ -190,7 +216,13 @@
       ],
       "request": {
         "method": "DELETE",
-        "header": [],
+        "header": [
+          {
+            "key": "User-Agent",
+            "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "type": "text"
+          }
+        ],
         "url": {
           "raw": "{{base_url}}/users/{{user_id}}",
           "host": [
@@ -231,7 +263,13 @@
       ],
       "request": {
         "method": "GET",
-        "header": [],
+        "header": [
+          {
+            "key": "User-Agent",
+            "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "type": "text"
+          }
+        ],
         "url": {
           "raw": "{{base_url}}/users/{{user_id}}",
           "host": [
@@ -267,11 +305,6 @@
           "// Add browser-like headers to bypass bot detection\r",
           "\r",
           "pm.request.headers.upsert({\r",
-          "    key: \"User-Agent\",\r",
-          "    value: \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36\"\r",
-          "});\r",
-          "\r",
-          "pm.request.headers.upsert({\r",
           "    key: \"Accept\",\r",
           "    value: \"application/json\"\r",
           "});\r",
@@ -298,6 +331,10 @@
   "variable": [
     {
       "key": "api_token",
+      "value": ""
+    },
+    {
+      "key": "base_url",
       "value": ""
     }
   ]
